@@ -86,6 +86,13 @@
 <script>
 export default {
   name: 'HelloWorld',
+  mounted() {
+    this.$axios({
+      url:"/cms/news/list"
+    }).then(res=>{
+      console.log(res);
+    })
+  },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

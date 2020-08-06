@@ -11,7 +11,7 @@ import  axios from "axios";
 import store  from "@/store/index";
 //2. create方法创建一个axios的实例
 const Server = axios.create({
-    baseURL: "",
+    baseURL: "https://api.it120.cc/small4",
     timeout: 3000,
 });
 

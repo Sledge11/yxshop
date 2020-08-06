@@ -1,112 +1,108 @@
 <template>
-  <div>
-    <van-search placeholder="输入搜索的商品名字" @focus="goSearch"/>
-    <!-- 分类列表数据 -->
-    <div>
-      <van-tree-select
-        :items="topCate"
-        :main-active-index.sync="activeIndex"
-        @click-nav="changeLeft"
-      >
-        <template #content>
-          <div class="sub_cate">
-            <router-link
-              tag="div"
-              :to="'/Fenlxq/'+item.id"
-              class="item"
-              v-for="(item,index) in subCate"
-              :key="index"
-            >
-              <img :src="item.icon" />
-              <p>{{item.name}}</p>
-            </router-link>
-          </div>
-        </template>
-      </van-tree-select>
-    </div>
+  <div class="box">
+      <!-- 头部的搜索框 -->
+      <van-search placeholder="请输入商品的名字" @focus="$router.push('/goods/search')"/>
+
+      <div>
+        <van-tree-select :items="category" :main-active-index.sync="active" class="tree">
+          <template #content>
+            <div id="sub_cate">
+              <div class="item" v-for="(item,index) in getCate" :key="index" @click="gotoCate(item.id)">
+                <img :src="item.icon" />
+                <p>{{item.name}}</p>
+              </div>
+            </div>
+          </template>
+        </van-tree-select>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "",
-  mounted() {
-    this.getCategory();
+  name: '',
+  mounted(){
+    this.getCategory()
   },
   data() {
     return {
-      //顶级分类
-      topCate: [{ text: "所有分类" }],
-      //顶级分类的ID
-      cateIds: [0],
-      categoryList: [], //所有的分类数据
-      activeIndex: 0 //左侧选项切换对应的索引
+      active: 0,
+      category: [{ text: '所有分类',id:0}],
+      subCategory:[],
     };
   },
-  computed: {
-    //计算属性
-    subCate() {
-      let arr = this.categoryList;
-      //当前选择的是所有分类的话
-      if (this.activeIndex == 0) {
-        return arr;
+  mounted() {
+    this.getCategory();
+  },
+  computed:{
+    getCate(){
+      let data = this.subCategory;
+      //如果active的值是0，
+      if(this.active == 0){
+        return data;
       }
-      //筛选子集分类
-      return arr.filter(item => {
-        return item.pid == this.cateIds[this.activeIndex];
-      });
+      //当前选中的商品分类的ID
+      let id = this.category[this.active].id;
+      console.log(id);
+      return data.filter(item=>{
+        return item.pid == id;
+      })
     }
   },
   methods: {
-    //获取商品分类的数据
-    getCategory() {
-      this.$axios({
-        url: "https://api.it120.cc/small4/shop/goods/category/all"
-      }).then(res => {
-        this.categoryList = res.data;
-        //筛选出所有的顶级分类
-        res.data.forEach(item => {
-          if (item.pid == 0) {
-            // console.log(item);
-            this.topCate.push({ text: item.name });
-            this.cateIds.push(item.id);
+    //获取分类的列表数据
+    getCategory(){
+      this.$axios.get("https://api.it120.cc/small4/shop/goods/category/all")
+      .then(res=>{
+        console.log(res);
+        //遍历所有的商品分类，然后找出pid==0的商品
+        let data = res.data.forEach(item=>{
+          if(item.pid == 0){//顶级分类
+          //实例化对象
+            let object = new Object();
+            object.id = item.id;
+            object.text = item.name;
+            this.category.push(object);
           }
-        });
-      });
+        })
+
+        this.subCategory = res.data;
+      })
     },
-    //点击切换左侧菜单
-    changeLeft(index) {
-      console.log(this.cateIds[index]);
+    gotoCate(cid){
+      this.$router.push("/goods/cate/"+cid);
     },
-    goSearch(){
-      
-      this.$router.push("/search");
-    }
-  }
+    
+  },
 };
 </script>
 
-<style lang="scss" scoped>
-.sub_cate {
-  max-height: 85%;
-  overflow: auto;
-  position: fixed;
-  display: flex;
-  flex-wrap: wrap;
-  .item {
-    width: 28%;
-    margin: 1%;
-    img {
-      width: 90%;
-      height: 1.2rem;
-    }
-    p {
-      line-height: 0.6rem;
-      width: 100%;
-      text-align: center;
-      text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+<style scoped lang="scss">
+.box{
+  width: 100%;
+  .tree{
+    height: 100% !important;
+
+    #sub_cate{
+      width:65%;
+      max-height: 85%;
+      position: fixed;
+      overflow: scroll;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      .item{
+        width: 31%;
+        margin: 1%;
+        text-align: center;
+        img{
+          width: 96%;
+          margin-left:2%;
+        }
+        p{
+          line-height: .55rem;
+        }
+      }
     }
   }
 }

@@ -3,38 +3,33 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store  from "@/store/index";
-import Loading from '@/components/Loading'
+import store from "./store/index"
 
+//导入vant组件
+import Vant from 'vant';
+import 'vant/lib/index.css';
+Vue.use(Vant);
 
-//全局使用
-Vue.component("Loading",Loading)
-//设置axios对象
-//import axios from "axios";
-import axios from "@/utils/request";//引入axios封装的拦截器对象
-Vue.prototype.$axios = axios;//this.$axios
+import '@/assets/style/reset.css';
 
-//引入vant组件信息
-import vant from "vant";
-import "vant/lib/index.css";
-Vue.use(vant);
+//导入axios拦截器
+import axios from "./utils/request.js";
+Vue.prototype.$axios = axios;
 
-//重置一些css样式，html- 50px
-import  "@/assets/style/reset.css";
 
 
 Vue.config.productionTip = false
 
-//全局路由守卫,进入组件之前触发
-router.beforeEach((to,from, next)=>{
-  
-  //判断路由是否设置title值，给组件添加标题内容
+
+//定义全局路由守卫
+router.beforeEach((to,from,next)=>{
+  document.title="严选商城";
   if(to.hasOwnProperty("meta")){
     document.title = to.meta.title;
   }
 
   next();
-});
+})
 
 /* eslint-disable no-new */
 new Vue({
