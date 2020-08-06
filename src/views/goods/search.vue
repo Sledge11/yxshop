@@ -50,11 +50,11 @@ export default {
           let data = this.goodsList;
           //搜索的关键字为空的时候
           if(this.keywords == ""){
-              this.historyFlag = true;
+              this.historyFlag = true;//历史纪录显示
               return [];
           }
-          this.historyFlag = false;
 
+          this.historyFlag = false; //历史纪录隐藏
         return data.filter(item=>{
             return item.name.indexOf(this.keywords) > -1;
         });
@@ -80,7 +80,7 @@ export default {
             this.historyList = [];
         }
     },
-    //设置历史记录信息
+    // 设置历史纪录信息
     setHistory(){
         console.log("test");
         //搜索的关键字为空，不让他添加历史纪录了

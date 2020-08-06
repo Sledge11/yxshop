@@ -31,13 +31,14 @@
     <!-- 底部商品的提交栏 -->
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" text="客服" />
-      <van-goods-action-icon icon="cart-o" text="购物车" @click="$router.push('/cart')" :badge="this.$store.getters.totalNums" />
+      <van-goods-action-icon icon="cart-o" text="购物车" @click="$router.push('/cart')" :badge="this.$store.getters.totalNums"/>
       <van-goods-action-icon icon="shop-o" text="店铺" />
       <van-goods-action-button type="warning" text="立即购买" />
       <van-goods-action-button type="danger" text="加入购物车" @click="skuShow = !skuShow" />
     </van-goods-action>
 
     <van-sku v-model="skuShow" :sku="sku" :goods="goods" @add-cart="addCart" />
+
 
     <!-- 返回的按钮 -->
     <div id="back" @click="$router.go(-1)">
@@ -84,7 +85,7 @@ export default {
           },
         ],
         list: [
-           {
+          {
             id: 1000,
             c1: 1,
             s1: 8,
@@ -148,14 +149,14 @@ export default {
       });
     },
     //加入购物车
-    addCart(){
+    addCart() {
       //判断一下用户是否登陆
-        let data = localStorage.getItem("09c_user");
-        if(data == null){
-            this.$toast.fail("请先登录您的账号");
-            this.$router.push("/login");
-            return false;
-        }
+      let data = localStorage.getItem("09c_user");
+      if (data == null) {
+        this.$toast.fail("请先登录您的账号");
+        this.$router.push("/login");
+        return false;
+      }
 
       //具体加入购物车的信息
       
@@ -166,7 +167,7 @@ export default {
       //购物车中存在当前商品
       if (index > -1) {
         cartList.map((item) => {
-         //判断添加的商品当前商品是否一致
+          //判断添加的商品当前商品是否一致
           if(item.id == this.gid){
              item.nums++;
           }
@@ -185,10 +186,10 @@ export default {
       }
       this.$store.commit("addCart", cartList); //添加购物车的对象
 
-        this.$toast.success("加入购物车成功");
+      this.$toast.success("加入购物车成功");
 
-        this.skuShow = false;
-    }
+      this.skuShow = false;
+    },
   },
 };
 </script>

@@ -41,7 +41,7 @@
     <!-- 精选专题区域 -->
     <div id="article">
       <div class="article-head">
-        <span>精选专题</span>
+        <span @click="tog()">精选专题</span>
         <van-icon name="arrow" />
       </div>
       <div class="article-list">
@@ -90,6 +90,11 @@ export default {
     Recommand,
   },
   methods: {
+    tog(){
+      this.$router.push({
+        path:"/article"
+      });
+    },
     //获取banner图的嘻嘻你
     getBanners() {
       this.$axios({
